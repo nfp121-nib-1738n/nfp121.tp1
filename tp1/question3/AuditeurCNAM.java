@@ -45,62 +45,32 @@ public class AuditeurCNAM {
      *         homonymes...
      */
     public String login() {
+        //Setting pre conditions for this.nom
         boolean conditionPourNom = this.nom != null && !this.nom.equals("");
+        //Setting pre conditions for this.prenom
         boolean conditionPourPrenom = this.prenom != null && !this.prenom.equals("");
-        if(conditionPourNom && conditionPourPrenom){
-            //Declare and affect String nomPrime
-            String nomPrime = this.nom;
-            //Crop the first 6 characters of this.nom (if exists) from 0 to 5 (6 exculuded)
-            if(nomPrime.length() > 6){
-                nomPrime = this.nom.substring(0,6);
-            }
-            //Transform to lower case the result
-            nomPrime = nomPrime.toLowerCase();
-            //nomPime length
-            int nomPimeLen = nomPrime.length();
-            //Search for each '-' or special character and replace it with '_'
-            for(int i=0;i<nomPimeLen;i++) {
-                System.out.println("index: "+i+" of "+(nomPrime.length()-1));
-                //Getting char at index i
-                char checkChar = nomPrime.charAt(i);
-                //Check for accents
-                if((checkChar+"").equals("é")) {
-                    //replace accent with the letter
-                    nomPrime = nomPrime.substring(0,i) + "e" + nomPrime.substring(i + 1);
-                } else {
-                    //Converting character to integer
-                    int charToInt = (int) checkChar;
-                    //Between a et z (lowercase)
-                    boolean conditionCorrecte = charToInt >= 97 && charToInt <= 122;
-                    //If this condition is not correct
-                    if(!conditionCorrecte) {
-                        //Replace this character by '_'
-                        String tmp = nomPrime.substring(0,i) + "_";
-                        //Check if this is the last character of the string
-                        if(i < 5){
-                            //If not add the rest of the string
-                            tmp += nomPrime.substring(i + 1);
-                        }
-                        nomPrime = tmp;
-                    }
-                }
-            }
-            //Get the first character (character at position 0) of the string this.prenom
-            char prenomPrim = this.prenom.toLowerCase().charAt(0);
-            //Conver this char to int
-            int prenomPrimCharToInt = (int) prenomPrim;
-            //Between a et z (lowercase)
-            boolean conditionPrenomPrimCorrecte = prenomPrimCharToInt >= 97 && prenomPrimCharToInt <= 122;
-            //Check for any special character
-            if(!conditionPrenomPrimCorrecte) {
-                prenomPrim = '_';
-            }
-            //Build the result
-            String res = nomPrime + "_" + prenomPrim;
-            return res;
-        } else {
+        //Check if one of the conditions are incorrect
+        if(!conditionPourNom || !conditionPourPrenom){
+            //If true return an empty string
             return "";
         }
+        //Declare and affect String nomPrime
+        String nomPrime = this.nom;
+        //Replace special characters by "_"
+        nomPrime = nomPrime.replaceAll("[!@#$%^&*();:.,<>?/\\-_ ]","_");
+        //Replace "é" by "e"
+        nomPrime = nomPrime.replaceAll("é","e");
+        //Transform to lower case
+        nomPrime = nomPrime.toLowerCase();
+        //Check if length >= 6
+        if(nomPrime.length() > 6){
+            //Crop string to 6 characters
+            nomPrime = nomPrime.substring(0, 6);
+        }
+        //Add "_" then lower case this.prenom and take the add letter
+        nomPrime += "_" + this.prenom.toLowerCase().charAt(0);
+        //Returh the login result string
+        return nomPrime;
     }
 
     /**
