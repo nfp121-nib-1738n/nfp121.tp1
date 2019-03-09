@@ -20,6 +20,9 @@ public class Picture {
     private Square window;
     private Triangle roof;
     private Circle sun;
+    
+    private boolean terreEstFixe;
+    private boolean soleilEstBleu;
 
     /**
      * Constructor for objects of class Picture
@@ -54,6 +57,10 @@ public class Picture {
         sun.moveHorizontal(180);
         sun.moveVertical(-10);
         sun.changeSize(60);
+        
+        terreEstFixe = true;
+        soleilEstBleu = false;
+        
         sun.makeVisible();
     }
 
@@ -79,8 +86,14 @@ public class Picture {
             wall.changeColor("red");
             window.changeColor("black");
             roof.changeColor("green");
-            sun.changeColor("yellow");
+            sun.changeColor("blue");
+            soleilEstBleu = true;
         }
     }
-
+    
+    public void coucherSoleil() {
+        if(terreEstFixe && soleilEstBleu) {
+            sun.slowMoveVertical(100);
+        }
+    }
 }
